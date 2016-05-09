@@ -5,10 +5,12 @@ import org.arturjoshi.domain.projections.NoPasswordProjection;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Set;
 
 @RepositoryRestResource(excerptProjection = NoPasswordProjection.class, path = "people")
 public interface UserRepository extends CrudRepository<User, Long> {
-    Set<User> findByUsernameStartsWith(@Param("username") String username);
+    @RestResource(path = "username", rel = "username")
+    Set<User> findByUsernameStartsWithIgnoreCase(@Param("username") String username);
 }

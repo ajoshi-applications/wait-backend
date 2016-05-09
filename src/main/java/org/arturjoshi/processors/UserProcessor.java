@@ -1,8 +1,11 @@
 package org.arturjoshi.processors;
 
-import org.arturjoshi.controllers.IllegalFriendRequestException;
-import org.arturjoshi.controllers.NoSuchUserException;
+import org.arturjoshi.controllers.exceptions.IllegalFriendRequestException;
+import org.arturjoshi.controllers.exceptions.NoSuchEventException;
+import org.arturjoshi.controllers.exceptions.NoSuchFriendException;
+import org.arturjoshi.controllers.exceptions.NoSuchUserException;
 import org.arturjoshi.controllers.UserController;
+import org.arturjoshi.domain.Event;
 import org.arturjoshi.domain.User;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -17,7 +20,7 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
     @Override
     public Resource<User> process(Resource<User> userResource) {
         User user = userResource.getContent();
-        // Adding "Invite friend" method
+        //"Invite friend" method
         try {
             userResource.add(linkTo(methodOn(UserController.class).
                     inviteUser(user.getId(), (long) 0, null)).withRel("invite"));
@@ -26,7 +29,19 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
         } catch (IllegalFriendRequestException e) {
             e.printStackTrace();
         }
-        // Adding "confirm/decline" methods
+        //"Remove friend" method
+        if(!user.getFriends().isEmpty()) {
+            for (User friend : user.getFriends()) {
+                try {
+                    userResource.add(linkTo(methodOn(UserController.class).
+                            removeFriend(user.getId(), friend.getId(), null)).withRel("removeFriend"));
+                } catch (NoSuchFriendException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        //"Confirm/Decline" methods
         if (!user.getFriendsRequests().isEmpty()) {
             for (User inviter : user.getFriendsRequests()) {
                 try {
@@ -41,9 +56,61 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
                 }
             }
         }
-        //Adding "Create event" method
+        //"Create event" method
         userResource.add(linkTo(methodOn(UserController.class).
                 createEvent(user.getId(), null, null)).withRel("createEvent"));
+        //"Invite friends to event" method
+        if(!user.getFriends().isEmpty() && !user.getEventsOrganized().isEmpty()) {
+            for (Event event : user.getEventsOrganized()) {
+                for (User friend : user.getFriends()) {
+                    try {
+                        userResource.add(linkTo(methodOn(UserController.class).
+                            inviteToEvent(user.getId(), event.getId(), friend.getId(), null)).withRel("inviteEvent"));
+                    } catch (NoSuchFriendException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchEventException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        //"Confirm event invitation" method
+        if(!user.getEventInvitations().isEmpty()) {
+            for (Event event : user.getEventInvitations()) {
+                try {
+                    userResource.add(linkTo(methodOn(UserController.class).
+                        confirmEventInvitation(user.getId(), event.getId(), null)).withRel("confirmEvent"));
+                } catch (NoSuchEventException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //"Decline event invitation" method
+        if(!user.getEventInvitations().isEmpty()) {
+            for (Event event : user.getEventInvitations()) {
+                try {
+                    userResource.add(linkTo(methodOn(UserController.class).
+                            declineEventInvitation(user.getId(), event.getId(), null)).withRel("declineEvent"));
+                } catch (NoSuchEventException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //"Kick friend from event" method
+        if(!user.getEventsOrganized().isEmpty()) {
+            for (Event event : user.getEventsOrganized()) {
+                for (User friend : event.getGuests()) {
+                    try {
+                        userResource.add(linkTo(methodOn(UserController.class).
+                                kickFriendEvent(user.getId(), event.getId(), friend.getId(), null)).withRel("kickEventFriend"));
+                    } catch (NoSuchFriendException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchEventException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         return userResource;
     }
 }
