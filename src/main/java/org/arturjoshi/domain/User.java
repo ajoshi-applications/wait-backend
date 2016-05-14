@@ -2,7 +2,6 @@ package org.arturjoshi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
@@ -23,7 +22,7 @@ public class User implements Identifiable<Long> {
     private String username;
 
     @Column(name = "pass", nullable = false)
-    @RestResource(exported = false)
+    @JsonIgnore
     private String pass;
 
     @Column(nullable = false)
@@ -67,6 +66,7 @@ public class User implements Identifiable<Long> {
 
         if (!username.equals(user.username)) return false;
         if (!phonenumber.equals(user.phonenumber)) return false;
+
         return email.equals(user.email);
     }
 
