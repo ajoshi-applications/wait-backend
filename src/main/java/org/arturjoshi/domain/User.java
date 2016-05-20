@@ -2,9 +2,12 @@ package org.arturjoshi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,6 +33,14 @@ public class User implements Identifiable<Long> {
 
     @Column(nullable = false)
     private String email;
+
+    public User(User user) {
+        this.id = user.id;
+        this.username = user.username;
+        this.pass = user.pass;
+        this.phonenumber = user.phonenumber;
+        this.email = user.email;
+    }
 
     @ManyToMany
     @JoinTable(name = "friends",

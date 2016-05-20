@@ -13,6 +13,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @RestResource(path = "username", rel = "username")
     Set<User> findByUsernameStartsWithIgnoreCase(@Param("username") String username);
 
+    @RestResource(path = "phonenumber", rel = "phonenumber")
+    Set<User> findByPhonenumberContaining(@Param("phonenumber") String phonenumber);
+
     @Override
     @RestResource(exported = false)
     public User save(User user);
