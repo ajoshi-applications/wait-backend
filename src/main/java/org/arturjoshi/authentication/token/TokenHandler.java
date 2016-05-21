@@ -3,7 +3,7 @@ package org.arturjoshi.authentication.token;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.arturjoshi.authentication.AccountAuthDetails;
-import org.arturjoshi.domain.User;
+import org.arturjoshi.users.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;

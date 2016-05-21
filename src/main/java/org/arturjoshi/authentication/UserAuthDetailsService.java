@@ -1,7 +1,7 @@
 package org.arturjoshi.authentication;
 
-import org.arturjoshi.domain.User;
-import org.arturjoshi.domain.dao.UserRepository;
+import org.arturjoshi.users.domain.User;
+import org.arturjoshi.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +19,7 @@ public class UserAuthDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = (User) userRepository.findByUsernameStartsWithIgnoreCase(username).toArray()[0];
+        User user = (User) userRepository.findByUsernameContainingIgnoreCase(username).toArray()[0];
         if(user == null) {
             throw new UsernameNotFoundException("Could not find account " + username);
         }

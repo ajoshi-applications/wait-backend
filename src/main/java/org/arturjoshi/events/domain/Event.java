@@ -1,7 +1,7 @@
-package org.arturjoshi.domain;
+package org.arturjoshi.events.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.arturjoshi.users.domain.User;
 
 import javax.persistence.*;
 import java.util.GregorianCalendar;
@@ -25,10 +25,10 @@ public class Event {
     private GregorianCalendar date;
 
     @Column(nullable = false)
-    private double lat;
+    private Double lat;
 
     @Column(nullable = false)
-    private double lon;
+    private Double lon;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

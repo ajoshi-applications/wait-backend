@@ -1,6 +1,6 @@
-package org.arturjoshi.domain.dao;
+package org.arturjoshi.events.repository;
 
-import org.arturjoshi.domain.Event;
+import org.arturjoshi.events.domain.Event;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 

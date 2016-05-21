@@ -1,6 +1,6 @@
 package org.arturjoshi.authentication;
 
-import org.arturjoshi.domain.User;
+import org.arturjoshi.users.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

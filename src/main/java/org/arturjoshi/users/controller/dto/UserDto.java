@@ -1,4 +1,4 @@
-package org.arturjoshi.controllers.dto;
+package org.arturjoshi.users.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,5 +11,4 @@ public class UserDto {
     private String username;
     private String pass;
     private String phonenumber;
-    private String email;
 }

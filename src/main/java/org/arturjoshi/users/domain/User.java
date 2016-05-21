@@ -1,13 +1,11 @@
-package org.arturjoshi.domain;
+package org.arturjoshi.users.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
+import org.arturjoshi.events.domain.Event;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,7 +19,7 @@ public class User implements Identifiable<Long> {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(name = "pass", nullable = false)
@@ -31,15 +29,11 @@ public class User implements Identifiable<Long> {
     @Column(nullable = false)
     private String phonenumber;
 
-    @Column(nullable = false)
-    private String email;
-
     public User(User user) {
         this.id = user.id;
         this.username = user.username;
         this.pass = user.pass;
         this.phonenumber = user.phonenumber;
-        this.email = user.email;
     }
 
     @ManyToMany
@@ -76,16 +70,13 @@ public class User implements Identifiable<Long> {
         User user = (User) o;
 
         if (!username.equals(user.username)) return false;
-        if (!phonenumber.equals(user.phonenumber)) return false;
-
-        return email.equals(user.email);
+        return phonenumber.equals(user.phonenumber);
     }
 
     @Override
     public int hashCode() {
         int result = username.hashCode();
         result = 31 * result + phonenumber.hashCode();
-        result = 31 * result + email.hashCode();
         return result;
     }
 }

@@ -1,12 +1,12 @@
-package org.arturjoshi.processors;
+package org.arturjoshi.users.processor;
 
-import org.arturjoshi.controllers.exceptions.IllegalFriendRequestException;
-import org.arturjoshi.controllers.exceptions.NoSuchEventException;
-import org.arturjoshi.controllers.exceptions.NoSuchFriendException;
-import org.arturjoshi.controllers.exceptions.NoSuchUserException;
-import org.arturjoshi.controllers.UserController;
-import org.arturjoshi.domain.Event;
-import org.arturjoshi.domain.User;
+import org.arturjoshi.users.controller.exceptions.IllegalFriendRequestException;
+import org.arturjoshi.users.controller.exceptions.NoSuchEventException;
+import org.arturjoshi.users.controller.exceptions.NoSuchFriendException;
+import org.arturjoshi.users.controller.exceptions.NoSuchUserException;
+import org.arturjoshi.users.controller.UserController;
+import org.arturjoshi.events.domain.Event;
+import org.arturjoshi.users.domain.User;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
         //"Invite friend" method
         try {
             userResource.add(linkTo(methodOn(UserController.class).
-                    inviteUser(user.getId(), (long) 0, null)).withRel("invite"));
+                    inviteUser(user.getId(), (long) 0, null)).withRel("inviteFriend"));
         } catch (NoSuchUserException e) {
             e.printStackTrace();
         } catch (IllegalFriendRequestException e) {
@@ -46,9 +46,9 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
             for (User inviter : user.getFriendsRequests()) {
                 try {
                     userResource.add(linkTo(methodOn(UserController.class).
-                            confirm(user.getId(), inviter.getId(), null)).withRel("confirm"));
+                            confirm(user.getId(), inviter.getId(), null)).withRel("confirmFriendRequest"));
                     userResource.add(linkTo(methodOn(UserController.class).
-                            decline(user.getId(), inviter.getId(), null)).withRel("decline"));
+                            decline(user.getId(), inviter.getId(), null)).withRel("declineFriendRequest"));
                 } catch (NoSuchUserException e) {
                     e.printStackTrace();
                 } catch (IllegalFriendRequestException e) {
@@ -65,7 +65,7 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
                 for (User friend : user.getFriends()) {
                     try {
                         userResource.add(linkTo(methodOn(UserController.class).
-                            inviteToEvent(user.getId(), event.getId(), friend.getId(), null)).withRel("inviteEvent"));
+                            inviteToEvent(user.getId(), event.getId(), friend.getId(), null)).withRel("inviteToEvent"));
                     } catch (NoSuchFriendException e) {
                         e.printStackTrace();
                     } catch (NoSuchEventException e) {
@@ -102,7 +102,7 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
                 for (User friend : event.getGuests()) {
                     try {
                         userResource.add(linkTo(methodOn(UserController.class).
-                                kickFriendEvent(user.getId(), event.getId(), friend.getId(), null)).withRel("kickEventFriend"));
+                                kickFriendEvent(user.getId(), event.getId(), friend.getId(), null)).withRel("kickFriendFromEvent"));
                     } catch (NoSuchFriendException e) {
                         e.printStackTrace();
                     } catch (NoSuchEventException e) {

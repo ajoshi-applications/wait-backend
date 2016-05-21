@@ -1,13 +1,13 @@
-package org.arturjoshi.controllers;
+package org.arturjoshi.users.controller;
 
-import org.arturjoshi.controllers.exceptions.IllegalFriendRequestException;
-import org.arturjoshi.controllers.exceptions.NoSuchEventException;
-import org.arturjoshi.controllers.exceptions.NoSuchFriendException;
-import org.arturjoshi.controllers.exceptions.NoSuchUserException;
-import org.arturjoshi.domain.Event;
-import org.arturjoshi.domain.User;
-import org.arturjoshi.domain.dao.EventsRepository;
-import org.arturjoshi.domain.dao.UserRepository;
+import org.arturjoshi.users.controller.exceptions.IllegalFriendRequestException;
+import org.arturjoshi.users.controller.exceptions.NoSuchEventException;
+import org.arturjoshi.users.controller.exceptions.NoSuchFriendException;
+import org.arturjoshi.users.controller.exceptions.NoSuchUserException;
+import org.arturjoshi.events.domain.Event;
+import org.arturjoshi.users.domain.User;
+import org.arturjoshi.events.repository.EventsRepository;
+import org.arturjoshi.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
