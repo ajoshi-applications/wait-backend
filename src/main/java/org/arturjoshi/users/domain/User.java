@@ -3,6 +3,7 @@ package org.arturjoshi.users.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.arturjoshi.events.domain.Event;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
@@ -26,7 +27,7 @@ public class User implements Identifiable<Long> {
     @JsonIgnore
     private String pass;
 
-    @Column(nullable = false)
+    @Column
     private String phonenumber;
 
     public User(User user) {

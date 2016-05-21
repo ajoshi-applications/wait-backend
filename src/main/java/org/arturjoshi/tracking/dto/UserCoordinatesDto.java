@@ -1,17 +1,17 @@
 package org.arturjoshi.tracking.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.GregorianCalendar;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class UserCoordinatesDto {
-    private String username;
+    @JsonIgnore
+    private String user_id;
     private Double lat;
     private Double lon;
-    private GregorianCalendar date;
+    private String date;
 }

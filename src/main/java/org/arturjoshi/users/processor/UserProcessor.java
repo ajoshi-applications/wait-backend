@@ -1,5 +1,6 @@
 package org.arturjoshi.users.processor;
 
+import org.arturjoshi.tracking.controller.TrackingController;
 import org.arturjoshi.users.controller.exceptions.IllegalFriendRequestException;
 import org.arturjoshi.users.controller.exceptions.NoSuchEventException;
 import org.arturjoshi.users.controller.exceptions.NoSuchFriendException;
@@ -40,6 +41,12 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
                 }
             }
         }
+
+        userResource.add(linkTo(methodOn(TrackingController.class).
+                sendCoordinates(user.getId().toString(), null)).withRel("sendCoordinates"));
+
+        userResource.add(linkTo(methodOn(TrackingController.class).
+                getTrackingData(user.getId().toString())).withRel("getTrackingData"));
 
         //"Confirm/Decline" methods
         if (!user.getFriendsRequests().isEmpty()) {
