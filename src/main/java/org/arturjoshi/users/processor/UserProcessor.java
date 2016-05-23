@@ -1,5 +1,6 @@
 package org.arturjoshi.users.processor;
 
+import org.arturjoshi.authentication.UserAuthenticationManager;
 import org.arturjoshi.tracking.controller.TrackingController;
 import org.arturjoshi.users.controller.exceptions.IllegalFriendRequestException;
 import org.arturjoshi.users.controller.exceptions.NoSuchEventException;
@@ -8,6 +9,7 @@ import org.arturjoshi.users.controller.exceptions.NoSuchUserException;
 import org.arturjoshi.users.controller.UserController;
 import org.arturjoshi.events.domain.Event;
 import org.arturjoshi.users.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
@@ -18,9 +20,15 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Component
 public class UserProcessor implements ResourceProcessor<Resource<User>> {
 
+    @Autowired
+    private UserAuthenticationManager userAuthenticationManager;
+
     @Override
     public Resource<User> process(Resource<User> userResource) {
         User user = userResource.getContent();
+        if(!userAuthenticationManager.isLegal(user)) {
+            return userResource;
+        }
         //"Invite friend" method
         try {
             userResource.add(linkTo(methodOn(UserController.class).
