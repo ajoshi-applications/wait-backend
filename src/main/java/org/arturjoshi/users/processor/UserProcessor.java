@@ -12,6 +12,7 @@ import org.arturjoshi.users.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -29,6 +30,16 @@ public class UserProcessor implements ResourceProcessor<Resource<User>> {
         if(!userAuthenticationManager.isLegal(user)) {
             return userResource;
         }
+        // Update personal info
+        userResource.add(linkTo(methodOn(UserController.class).
+            updateUsername(user.getId(), "", null)).withRel("updateUsername"));
+
+        userResource.add(linkTo(methodOn(UserController.class).
+                updatePhonenumber(user.getId(), "", null)).withRel("updatePhonenumber"));
+
+        userResource.add(linkTo(methodOn(UserController.class).
+                updatePassword(user.getId(), "", null)).withRel("updatePassword"));
+
         //"Invite friend" method
         try {
             userResource.add(linkTo(methodOn(UserController.class).

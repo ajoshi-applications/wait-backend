@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
@@ -206,5 +207,53 @@ public class UserController {
         }
         event.getGuests().remove(friend);
         return asm.toFullResource(eventsRepository.save(event));
+    }
+
+    @RequestMapping(value = "people/update_username/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public PersistentEntityResource updateUsername(@PathVariable("id") Long id, @RequestParam("username") String username,
+                                               PersistentEntityResourceAssembler asm) {
+        User user = userRepository.findOne(id);
+        if(!userAuthenticationManager.isLegal(user)) {
+            throw new AccessDeniedException("Access is denied");
+        }
+        user.setUsername(username);
+        return asm.toFullResource(userRepository.save(user));
+    }
+
+    @RequestMapping(value = "people/update_phonenumber/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public PersistentEntityResource updatePhonenumber(@PathVariable("id") Long id,
+                                                      @RequestParam("phonenumber") String phonenumber,
+                                               PersistentEntityResourceAssembler asm) {
+        User user = userRepository.findOne(id);
+        if(!userAuthenticationManager.isLegal(user)) {
+            throw new AccessDeniedException("Access is denied");
+        }
+        user.setPhonenumber(phonenumber);
+        return asm.toFullResource(userRepository.save(user));
+    }
+
+    @RequestMapping(value = "people/update_password/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public PersistentEntityResource updatePassword(@PathVariable("id") Long id,
+                                                   @RequestParam("pass") String pass,
+                                               PersistentEntityResourceAssembler asm) {
+        User user = userRepository.findOne(id);
+        if(!userAuthenticationManager.isLegal(user)) {
+            throw new AccessDeniedException("Access is denied");
+        }
+        user.setPass(pass);
+        return asm.toFullResource(userRepository.save(user));
+    }
+
+    @RequestMapping(value = "people/deleteProfile/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@PathVariable("id") Long id) {
+        User user = userRepository.findOne(id);
+        if(!userAuthenticationManager.isLegal(user)) {
+            throw new AccessDeniedException("Access is denied");
+        }
+        userRepository.delete(user);
     }
 }

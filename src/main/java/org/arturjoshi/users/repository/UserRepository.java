@@ -19,4 +19,16 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Override
     @RestResource(exported = false)
     public User save(User user);
+
+    @Override
+    @RestResource(exported = false)
+    public void delete(User user);
+
+    @Override
+    @RestResource(exported = false)
+    public void delete(Long id);
+
+    @Override
+    @RestResource(exported = false)
+    public void deleteAll();
 }
