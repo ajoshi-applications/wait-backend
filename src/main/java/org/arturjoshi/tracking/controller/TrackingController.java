@@ -23,24 +23,18 @@ public class TrackingController {
     @Autowired
     private UserAuthenticationManager userAuthenticationManager;
 
-    @RequestMapping(value = "/sendCoordinates/{user_id}")
+    @RequestMapping(value = "/sendCoordinates/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserCoordinatesDto sendCoordinates(@PathVariable("user_id") String userId, @RequestBody UserCoordinatesDto userCoordinatesDto) {
-        User user = userRepository.findOne(Long.parseLong(userId));
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
-        userCoordinatesDto.setUser_id(userId);
+    public UserCoordinatesDto sendCoordinates(@PathVariable("id") String id, @RequestBody UserCoordinatesDto userCoordinatesDto) {
+        User user = userRepository.findOne(Long.parseLong(id));
+        userCoordinatesDto.setUser_id(id);
         return userCoordinatesMongoRepository.save(userCoordinatesDto);
     }
 
-    @RequestMapping(value = "getTrackingData/{user_id}")
+    @RequestMapping(value = "getTrackingData/{id}")
     @ResponseBody
-    public List<UserCoordinatesDto> getTrackingData(@PathVariable("user_id") String userId) {
-        User user = userRepository.findOne(Long.parseLong(userId));
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
-        return userCoordinatesMongoRepository.getById(userId);
+    public List<UserCoordinatesDto> getTrackingData(@PathVariable("id") String id) {
+        User user = userRepository.findOne(Long.parseLong(id));
+        return userCoordinatesMongoRepository.getById(id);
     }
 }

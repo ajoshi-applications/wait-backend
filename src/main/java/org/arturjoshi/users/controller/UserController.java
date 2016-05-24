@@ -14,7 +14,6 @@ import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 @RepositoryRestController
@@ -35,9 +34,6 @@ public class UserController {
                                                PersistentEntityResourceAssembler asm)
             throws NoSuchUserException, IllegalFriendRequestException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         User invitee = userRepository.findOne(invitee_id);
         if(user == null || invitee == null) {
             throw new NoSuchUserException();
@@ -63,9 +59,6 @@ public class UserController {
     public PersistentEntityResource removeFriend(@PathVariable("id") Long id, @PathVariable("friend_id") Long friendId,
                                                  PersistentEntityResourceAssembler asm) throws NoSuchFriendException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         User friend = userRepository.findOne(friendId);
         if(!user.getFriends().contains(friend)) {
             throw new NoSuchFriendException();
@@ -82,9 +75,6 @@ public class UserController {
                                                PersistentEntityResourceAssembler asm)
             throws NoSuchUserException, IllegalFriendRequestException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         User inviter = userRepository.findOne(invitee_id);
         if(user == null || inviter == null) {
             throw new NoSuchUserException();
@@ -106,9 +96,6 @@ public class UserController {
                                             PersistentEntityResourceAssembler asm)
             throws NoSuchUserException, IllegalFriendRequestException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         User inviter = userRepository.findOne(invitee_id);
         if(user == null || inviter == null) {
             throw new NoSuchUserException();
@@ -126,9 +113,6 @@ public class UserController {
     public PersistentEntityResource createEvent(@PathVariable("id") Long id, @RequestBody Event event,
                                                 PersistentEntityResourceAssembler asm) {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         event.setOwner(user);
         return asm.toFullResource(eventsRepository.save(event));
     }
@@ -139,9 +123,6 @@ public class UserController {
                                                   @PathVariable("friend_id") Long friendId,
                                                   PersistentEntityResourceAssembler asm) throws NoSuchFriendException, NoSuchEventException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         User friend = userRepository.findOne(friendId);
         Event event = eventsRepository.findOne(eventId);
 
@@ -160,9 +141,6 @@ public class UserController {
     public PersistentEntityResource confirmEventInvitation(@PathVariable("id") Long id, @PathVariable("event_id") Long eventId,
                                                            PersistentEntityResourceAssembler asm) throws NoSuchEventException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         Event event = eventsRepository.findOne(eventId);
         if(!user.getEventInvitations().contains(event)) {
             throw new NoSuchEventException();
@@ -177,9 +155,6 @@ public class UserController {
     public PersistentEntityResource declineEventInvitation(@PathVariable("id") Long id, @PathVariable("event_id") Long eventId,
                                                            PersistentEntityResourceAssembler asm) throws NoSuchEventException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         Event event = eventsRepository.findOne(eventId);
         if(!user.getEventInvitations().contains(event)) {
             throw new NoSuchEventException();
@@ -194,9 +169,6 @@ public class UserController {
                                                     @PathVariable("friend_id") Long friendId,
                                                     PersistentEntityResourceAssembler asm) throws NoSuchFriendException, NoSuchEventException {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         User friend = userRepository.findOne(friendId);
         Event event = eventsRepository.findOne(eventId);
         if(!user.getFriends().contains(friend)) {
@@ -214,9 +186,6 @@ public class UserController {
     public PersistentEntityResource updateUsername(@PathVariable("id") Long id, @RequestParam("username") String username,
                                                PersistentEntityResourceAssembler asm) {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         user.setUsername(username);
         return asm.toFullResource(userRepository.save(user));
     }
@@ -227,9 +196,6 @@ public class UserController {
                                                       @RequestParam("phonenumber") String phonenumber,
                                                PersistentEntityResourceAssembler asm) {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         user.setPhonenumber(phonenumber);
         return asm.toFullResource(userRepository.save(user));
     }
@@ -240,9 +206,6 @@ public class UserController {
                                                    @RequestParam("pass") String pass,
                                                PersistentEntityResourceAssembler asm) {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         user.setPass(pass);
         return asm.toFullResource(userRepository.save(user));
     }
@@ -251,9 +214,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable("id") Long id) {
         User user = userRepository.findOne(id);
-        if(!userAuthenticationManager.isLegal(user)) {
-            throw new AccessDeniedException("Access is denied");
-        }
         userRepository.delete(user);
     }
 }
