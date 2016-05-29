@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.arturjoshi.authentication.AccountAuthDetails;
 import org.arturjoshi.users.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,9 +23,10 @@ import java.util.Arrays;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TokenHandler {
 
-    private String secretKey = "secretKey";
-
-    private String expirationTime = "604800000";
+    @Value("${server.privateKey}")
+    private String secretKey;
+    @Value("${server.expirationTime}")
+    private String expirationTime;
 
     private @NonNull
     UserDetailsService userDetailsService;

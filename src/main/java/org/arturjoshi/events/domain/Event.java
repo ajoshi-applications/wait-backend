@@ -53,9 +53,10 @@ public class Event {
 
         Event event = (Event) o;
 
-        if (Double.compare(event.lat, lat) != 0) return false;
-        if (Double.compare(event.lon, lon) != 0) return false;
+        //Max difference is 65m
         if (!title.equals(event.title)) return false;
+        if (Math.abs(event.lat - lat) > 0.0005) return false;
+        if (Math.abs(event.lon - lon) > 0.0005) return false;
         return date.equals(event.date);
 
     }
