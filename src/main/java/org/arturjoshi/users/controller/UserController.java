@@ -216,4 +216,31 @@ public class UserController {
         User user = userRepository.findOne(id);
         userRepository.delete(user);
     }
+
+    @RequestMapping(value = "people/{id}/updateEvent/{event_id}", method = RequestMethod.PATCH)
+    @ResponseBody
+    public PersistentEntityResource updateEvent(@PathVariable("id") Long id, @PathVariable("event_id") Long eventId,
+                                                @RequestBody Event event, PersistentEntityResourceAssembler asm) throws NoSuchEventException {
+        User user = userRepository.findOne(id);
+        Event eventUpdated = eventsRepository.findOne(eventId);
+        if(!user.getEventsOrganized().contains(eventUpdated)) {
+            throw new NoSuchEventException();
+        }
+        eventUpdated.setTitle(event.getTitle());
+        eventUpdated.setLat(event.getLat());
+        eventUpdated.setLon(event.getLon());
+        eventUpdated.setDate(event.getDate());
+        return asm.toFullResource(eventsRepository.save(eventUpdated));
+    }
+
+    @RequestMapping(value = "people/{id}/deleteEvent/{event_id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteEvent(@PathVariable("id") Long id, @PathVariable("event_id") Long eventId) throws NoSuchEventException {
+        User user = userRepository.findOne(id);
+        Event event = eventsRepository.findOne(eventId);
+        if(!user.getEventsOrganized().contains(event)) {
+            throw new NoSuchEventException();
+        }
+        eventsRepository.delete(event);
+    }
 }

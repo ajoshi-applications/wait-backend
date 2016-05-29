@@ -26,9 +26,5 @@ public interface EventsRepository extends CrudRepository<Event, Long> {
 
     @Override
     @RestResource(exported = false)
-    Event findOne(Long aLong);
-
-    @Override
-    @RestResource(exported = false)
     Iterable<Event> findAll();
 }
