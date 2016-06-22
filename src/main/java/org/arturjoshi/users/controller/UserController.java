@@ -1,6 +1,7 @@
 package org.arturjoshi.users.controller;
 
 import org.arturjoshi.authentication.UserAuthenticationManager;
+import org.arturjoshi.sockets.SocketsService;
 import org.arturjoshi.users.controller.exceptions.IllegalFriendRequestException;
 import org.arturjoshi.users.controller.exceptions.NoSuchEventException;
 import org.arturjoshi.users.controller.exceptions.NoSuchFriendException;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RepositoryRestController
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
@@ -27,6 +29,9 @@ public class UserController {
 
     @Autowired
     private UserAuthenticationManager userAuthenticationManager;
+
+    @Autowired
+    private SocketsService socketsService;
 
     @RequestMapping(value = "/people/{id}/invite/{invitee_id}", method = RequestMethod.POST)
     @ResponseBody
@@ -51,6 +56,7 @@ public class UserController {
         }
 
         invitee.getFriendsRequests().add(user);
+        socketsService.newFriendRequest(invitee_id);
         return asm.toFullResource(userRepository.save(invitee));
     }
 

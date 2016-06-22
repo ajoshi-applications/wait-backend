@@ -55,10 +55,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         String authenticateLink = "/authenticate";
         String registerLink = "/people/register";
+        String sockets = "/ws/**";
 
         http
                 .authorizeRequests()
-                .antMatchers(authenticateLink, registerLink).permitAll()
+                .antMatchers(authenticateLink, registerLink, sockets).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).
