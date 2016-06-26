@@ -46,17 +46,22 @@ public class UserController {
         if(user.getFriends().contains(invitee)) {
             throw new IllegalFriendRequestException();
         }
+        if(invitee.getFriendsRequests().contains(user)) {
+            throw new IllegalFriendRequestException();
+        }
         // If we invite user, who invites us
         if(user.getFriendsRequests().contains(invitee)) {
             user.getFriendsRequests().remove(invitee);
             invitee.getFriends().add(user);
             user.getFriends().add(invitee);
             userRepository.save(invitee);
+            socketsService.newFriend(id, invitee);
+            socketsService.newFriend(invitee_id, user);
             return asm.toFullResource(userRepository.save(user));
         }
 
         invitee.getFriendsRequests().add(user);
-        socketsService.newFriendRequest(invitee_id);
+        socketsService.newFriendRequest(invitee_id, user);
         return asm.toFullResource(userRepository.save(invitee));
     }
 
@@ -72,16 +77,17 @@ public class UserController {
         user.getFriends().remove(friend);
         friend.getFriends().remove(user);
         userRepository.save(friend);
+        socketsService.deleteFriend(friendId, user);
         return asm.toFullResource(userRepository.save(user));
     }
 
     @RequestMapping(value = "/people/{id}/confirm/{inviter_id}", method = RequestMethod.POST)
     @ResponseBody
-    public PersistentEntityResource confirm(@PathVariable("id") Long id, @PathVariable("inviter_id") Long invitee_id,
+    public PersistentEntityResource confirm(@PathVariable("id") Long id, @PathVariable("inviter_id") Long inviter_id,
                                                PersistentEntityResourceAssembler asm)
             throws NoSuchUserException, IllegalFriendRequestException {
         User user = userRepository.findOne(id);
-        User inviter = userRepository.findOne(invitee_id);
+        User inviter = userRepository.findOne(inviter_id);
         if(user == null || inviter == null) {
             throw new NoSuchUserException();
         }
@@ -92,8 +98,9 @@ public class UserController {
         user.getFriendsRequests().remove(inviter);
         user.getFriends().add(inviter);
         inviter.getFriends().add(user);
-        userRepository.save(inviter);
-        return asm.toFullResource(userRepository.save(user));
+        userRepository.save(user);
+        socketsService.newFriend(inviter_id, user);
+        return asm.toFullResource(userRepository.save(inviter));
     }
 
     @RequestMapping(value = "/people/{id}/decline/{inviter_id}", method = RequestMethod.POST)
