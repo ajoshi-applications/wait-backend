@@ -3,6 +3,8 @@ package org.arturjoshi.authentication;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.arturjoshi.authentication.token.TokenHandler;
+import org.arturjoshi.authentication.dto.TokenHandlerDto;
+import org.arturjoshi.users.controller.dto.UserAuthenticationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,13 +29,13 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public String authenticate(@RequestParam String username, @RequestParam String password)
+    public TokenHandlerDto authenticate(@RequestBody UserAuthenticationDto dto)
             throws BadCredentialsException{
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(username, password);
+                new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPass());
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        return tokenHandler.createTokenForUser((UserDetails) authentication.getPrincipal());
+        return new TokenHandlerDto(tokenHandler.createTokenForUser((UserDetails) authentication.getPrincipal()));
     }
 
     @ExceptionHandler(BadCredentialsException.class)

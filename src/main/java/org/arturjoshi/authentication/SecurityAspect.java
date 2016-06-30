@@ -19,8 +19,7 @@ public class SecurityAspect {
     @Autowired
     private UserRepository userRepository;
 
-    @Before("execution(* org.arturjoshi.users.controller.UserController.*(..))" +
-            "|| execution(* org.arturjoshi.tracking.controller.TrackingController.*(..))")
+    @Before("execution(* org.arturjoshi.users.controller.UserController.*(..))")
     public void isLegal(JoinPoint joinPoint) {
         Long id = (Long) joinPoint.getArgs()[0];
         User user = userRepository.findOne(id);
