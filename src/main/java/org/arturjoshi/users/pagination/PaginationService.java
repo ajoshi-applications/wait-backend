@@ -1,6 +1,5 @@
 package org.arturjoshi.users.pagination;
 
-import org.arturjoshi.users.domain.User;
 import org.springframework.hateoas.Identifiable;
 import org.springframework.stereotype.Service;
 
