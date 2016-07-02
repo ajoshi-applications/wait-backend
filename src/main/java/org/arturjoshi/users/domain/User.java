@@ -3,10 +3,12 @@ package org.arturjoshi.users.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.arturjoshi.events.domain.Event;
+import org.arturjoshi.users.controller.dto.UserInfoDto;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,26 +44,30 @@ public class User implements Identifiable<Long> {
         joinColumns = {@JoinColumn(name = "iduser1")},
         inverseJoinColumns = {@JoinColumn(name = "iduser2")})
     @JsonIgnore
-    private Set<User> friends;
+    private List<User> friends;
 
     @ManyToMany
     @JoinTable(name = "friends_requests",
         joinColumns = {@JoinColumn(name = "iduser1")},
         inverseJoinColumns = {@JoinColumn(name = "iduser2")})
     @JsonIgnore
-    private Set<User> friendsRequests;
+    private List<User> friendsRequests;
 
     @OneToMany(mappedBy = "owner")
     @JsonIgnore
-    private Set<Event> eventsOrganized;
+    private List<Event> eventsOrganized;
 
     @ManyToMany(mappedBy = "guests")
     @JsonIgnore
-    private Set<Event> events;
+    private List<Event> events;
 
     @ManyToMany(mappedBy = "invitations")
     @JsonIgnore
-    private Set<Event> eventInvitations;
+    private List<Event> eventInvitations;
+
+    public UserInfoDto toUserInfoDto() {
+        return new UserInfoDto(id, username, phonenumber);
+    }
 
     @Override
     public boolean equals(Object o) {

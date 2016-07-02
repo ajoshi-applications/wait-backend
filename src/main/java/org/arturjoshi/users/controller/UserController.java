@@ -9,12 +9,11 @@ import org.arturjoshi.users.controller.exceptions.NoSuchUserException;
 import org.arturjoshi.events.domain.Event;
 import org.arturjoshi.users.domain.User;
 import org.arturjoshi.events.repository.EventsRepository;
+import org.arturjoshi.users.pagination.Page;
 import org.arturjoshi.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RepositoryRestController

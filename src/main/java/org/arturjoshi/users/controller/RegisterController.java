@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.arturjoshi.users.repository.UserRepository;
 import org.arturjoshi.users.controller.dto.UserDto;
 import org.arturjoshi.users.domain.User;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 
 @RepositoryRestController
@@ -22,11 +24,11 @@ public class RegisterController {
         user.setUsername(userDto.getUsername());
         user.setPass(userDto.getPass());
         user.setPhonenumber(userDto.getPhonenumber());
-        user.setFriends(new HashSet<>());
-        user.setFriendsRequests(new HashSet<>());
-        user.setEventsOrganized(new HashSet<>());
-        user.setEvents(new HashSet<>());
-        user.setEventInvitations(new HashSet<>());
+        user.setFriends(new ArrayList<>());
+        user.setFriendsRequests(new ArrayList<>());
+        user.setEventsOrganized(new ArrayList<>());
+        user.setEvents(new ArrayList<>());
+        user.setEventInvitations(new ArrayList<>());
         userRepository.save(user);
     }
 }
