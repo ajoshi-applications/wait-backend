@@ -34,6 +34,22 @@ public class UserProvider {
         return users;
     }
 
+    @Transactional(readOnly = true)
+    public Page<User> searchByUsername(String username, Integer page){
+        Pageable pageRequest = createOrdersPageRequest(page);
+        Set<User> usersSet = userRepository.findByUsernameContainingIgnoreCase(username);
+        Page<User> users = new PageImpl<User>(new ArrayList<>(usersSet), pageRequest, usersSet.size());
+        return users;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<User> searchByPhonenumber(String phonenumber, Integer page){
+        Pageable pageRequest = createOrdersPageRequest(page);
+        Set<User> usersSet = userRepository.findByPhonenumberContaining(phonenumber);
+        Page<User> users = new PageImpl<User>(new ArrayList<>(usersSet), pageRequest, usersSet.size());
+        return users;
+    }
+
     private Pageable createOrdersPageRequest(Integer pageNumber) {
         return new PageRequest(pageNumber - 1, PAGE_SIZE);
     }

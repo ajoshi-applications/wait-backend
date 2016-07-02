@@ -10,10 +10,10 @@ import java.util.Set;
 
 @RepositoryRestResource(path = "people")
 public interface UserRepository extends CrudRepository<User, Long> {
-    @RestResource(path = "username", rel = "username")
+    @RestResource(exported = false)
     Set<User> findByUsernameContainingIgnoreCase(@Param("username") String username);
 
-    @RestResource(path = "phonenumber", rel = "phonenumber")
+    @RestResource(exported = false)
     Set<User> findByPhonenumberContaining(@Param("phonenumber") String phonenumber);
 
     @Override

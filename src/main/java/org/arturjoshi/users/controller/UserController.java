@@ -48,6 +48,22 @@ public class UserController {
         return userProvider.getFriendsRequests(id, page);
     }
 
+    @RequestMapping(value = "/people/{id}/searchByUsername", method = RequestMethod.GET)
+    @ResponseBody
+    public Page<User> searchByUsername(@PathVariable("id") Long id,
+                                         @RequestParam("username") String username,
+                                         @RequestParam("page") Integer page){
+        return userProvider.searchByUsername(username, page);
+    }
+
+    @RequestMapping(value = "/people/{id}/searchByPhonenumber", method = RequestMethod.GET)
+    @ResponseBody
+    public Page<User> searchByPhonenumber(@PathVariable("id") Long id,
+                                         @RequestParam("phonenumber") String phonenumber,
+                                         @RequestParam("page") Integer page){
+        return userProvider.searchByPhonenumber(phonenumber, page);
+    }
+
     @RequestMapping(value = "/people/{id}/invite/{invitee_id}", method = RequestMethod.POST)
     @ResponseBody
     public User inviteUser(@PathVariable("id") Long id, @PathVariable("invitee_id") Long invitee_id)
