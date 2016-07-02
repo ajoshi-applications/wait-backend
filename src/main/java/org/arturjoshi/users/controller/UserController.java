@@ -42,6 +42,12 @@ public class UserController {
         return userProvider.getFriends(id, page);
     }
 
+    @RequestMapping(value = "/people/{id}/friendsRequests/{page}", method = RequestMethod.GET)
+    @ResponseBody
+    public Page<User> getFriendsRequests(@PathVariable("id") Long id, @PathVariable("page") Integer page){
+        return userProvider.getFriendsRequests(id, page);
+    }
+
     @RequestMapping(value = "/people/{id}/invite/{invitee_id}", method = RequestMethod.POST)
     @ResponseBody
     public User inviteUser(@PathVariable("id") Long id, @PathVariable("invitee_id") Long invitee_id)
