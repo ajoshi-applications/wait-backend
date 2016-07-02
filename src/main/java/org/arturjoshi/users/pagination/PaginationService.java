@@ -1,6 +1,7 @@
 package org.arturjoshi.users.pagination;
 
 import org.arturjoshi.users.domain.User;
+import org.springframework.hateoas.Identifiable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,11 +10,11 @@ import java.util.List;
 @Service
 public class PaginationService {
 
-    public Page<User> getPage(List<User> users, Integer pageNumber, Integer pageSize) {
-        Page<User> resultPage = new Page<>();
+    public <T extends Identifiable<Long>> Page<T> getPage(List<T> elements, Integer pageNumber, Integer pageSize) {
+        Page<T> resultPage = new Page<>();
 
         /* Number of elements */
-        resultPage.setTotalElements(users.size());
+        resultPage.setTotalElements(elements.size());
         resultPage.setSize(pageSize);
         resultPage.setNumber(pageNumber);
 
@@ -28,7 +29,7 @@ public class PaginationService {
         } else {
             resultPage.setTotalPages(((resultPage.getTotalElements() - 1) / pageSize) + 1);
             if(pageNumber > resultPage.getTotalPages()) {
-                return getPage(users, resultPage.getTotalPages(), pageSize);
+                return getPage(elements, resultPage.getTotalPages(), pageSize);
             }
             resultPage.setFirst(pageNumber == 1);
             resultPage.setLast(pageNumber.equals(resultPage.getTotalPages()));
@@ -36,9 +37,9 @@ public class PaginationService {
                     resultPage.getTotalElements() / (pageSize * pageNumber) >= 1 ?
                         pageSize : resultPage.getTotalElements() % pageSize);
             if (resultPage.isLast()) {
-                resultPage.setContent(users.subList((pageNumber - 1) * pageSize, resultPage.getTotalElements()));
+                resultPage.setContent(elements.subList((pageNumber - 1) * pageSize, resultPage.getTotalElements()));
             } else {
-                resultPage.setContent(users.subList((pageNumber - 1) * pageSize, pageNumber * pageSize));
+                resultPage.setContent(elements.subList((pageNumber - 1) * pageSize, pageNumber * pageSize));
             }
             return resultPage;
         }
