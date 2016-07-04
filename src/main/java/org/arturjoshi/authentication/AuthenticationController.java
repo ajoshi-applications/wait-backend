@@ -35,7 +35,8 @@ public class AuthenticationController {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPass());
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        return new TokenHandlerDto(tokenHandler.createTokenForUser((UserDetails) authentication.getPrincipal()));
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return new TokenHandlerDto(tokenHandler.createTokenForUser(userDetails), userDetails);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

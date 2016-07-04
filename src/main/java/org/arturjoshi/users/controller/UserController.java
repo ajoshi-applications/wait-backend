@@ -14,6 +14,7 @@ import org.arturjoshi.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RepositoryRestController
@@ -45,22 +46,6 @@ public class UserController {
     @ResponseBody
     public Page<User> getFriendsRequests(@PathVariable("id") Long id, @PathVariable("page") Integer page){
         return userProvider.getFriendsRequests(id, page);
-    }
-
-    @RequestMapping(value = "/people/{id}/searchByUsername", method = RequestMethod.GET)
-    @ResponseBody
-    public Page<User> searchByUsername(@PathVariable("id") Long id,
-                                         @RequestParam("username") String username,
-                                         @RequestParam("page") Integer page){
-        return userProvider.searchByUsername(username, page);
-    }
-
-    @RequestMapping(value = "/people/{id}/searchByPhonenumber", method = RequestMethod.GET)
-    @ResponseBody
-    public Page<User> searchByPhonenumber(@PathVariable("id") Long id,
-                                         @RequestParam("phonenumber") String phonenumber,
-                                         @RequestParam("page") Integer page){
-        return userProvider.searchByPhonenumber(phonenumber, page);
     }
 
     @RequestMapping(value = "/people/{id}/invite/{invitee_id}", method = RequestMethod.POST)
