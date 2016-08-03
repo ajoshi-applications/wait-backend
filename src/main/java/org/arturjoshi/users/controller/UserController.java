@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RepositoryRestController
 @CrossOrigin(origins = "*")
 public class UserController {
@@ -77,6 +79,21 @@ public class UserController {
         invitee.getFriendsRequests().add(user);
         socketsService.newFriendRequest(invitee_id, user);
         return userRepository.save(invitee);
+    }
+
+    @RequestMapping(value = "/people/{id}/inviteByPhonenumbers", method = RequestMethod.POST)
+    @ResponseBody
+    public User inviteByPhonenumbers(@PathVariable("id") Long id, @RequestBody List<String> phonenumbers) {
+        User user = userRepository.findOne(id);
+        for (String phonenumber : phonenumbers) {
+            List<User> searchResults = userRepository.findByPhonenumberContaining(phonenumber);
+            if(!searchResults.isEmpty()) {
+                User invitee = searchResults.get(0);
+                invitee.getFriendsRequests().add(user);
+                userRepository.save(invitee);
+            }
+        }
+        return userRepository.save(user);
     }
 
     @RequestMapping(value = "/people/{id}/removeFriend/{friend_id}", method = RequestMethod.DELETE)
