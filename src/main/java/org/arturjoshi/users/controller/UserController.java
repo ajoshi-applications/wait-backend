@@ -81,21 +81,6 @@ public class UserController {
         return userRepository.save(invitee);
     }
 
-    @RequestMapping(value = "/people/{id}/inviteByPhonenumbers", method = RequestMethod.POST)
-    @ResponseBody
-    public User inviteByPhonenumbers(@PathVariable("id") Long id, @RequestBody List<String> phonenumbers) {
-        User user = userRepository.findOne(id);
-        for (String phonenumber : phonenumbers) {
-            List<User> searchResults = userRepository.findByPhonenumberContaining(phonenumber);
-            if(!searchResults.isEmpty()) {
-                User invitee = searchResults.get(0);
-                invitee.getFriendsRequests().add(user);
-                userRepository.save(invitee);
-            }
-        }
-        return userRepository.save(user);
-    }
-
     @RequestMapping(value = "/people/{id}/removeFriend/{friend_id}", method = RequestMethod.DELETE)
     @ResponseBody
     public User removeFriend(@PathVariable("id") Long id, @PathVariable("friend_id") Long friendId)
